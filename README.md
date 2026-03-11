@@ -56,25 +56,26 @@ The system enables natural language querying across **2,508 quotes** from **880 
 
 | Feature | Description |
 |---------|-------------|
-| 🔍 *Semantic Search* | Natural language understanding via Sentence-BERT (all-mpnet-base-v2) |
-| 🔄 *Hybrid Retrieval* | Dense semantic + BM25 sparse search fused via RRF |
-| 🧭 *Multi-hop Queries* | Intersection-based search across multiple semantic criteria |
-| 🔧 *Metadata Filtering* | Filter by author, tags, and historical era |
-| 📊 *RAG Evaluation* | Retrieval faithfulness benchmarks + hallucination monitoring |
+| 🔍 **Semantic Search** | Natural language understanding via Sentence-BERT (all-mpnet-base-v2) |
+| 🔄 **Hybrid Retrieval** | Dense semantic + BM25 sparse search fused via RRF |
+| 🧭 **Multi-hop Queries** | Intersection-based search across multiple semantic criteria |
+| 🔧 **Metadata Filtering** | Filter by author, tags, and historical era |
+| 📊 **RAG Evaluation** | Retrieval faithfulness benchmarks + hallucination monitoring |
 
 ### Bonus
 
 | Feature | Description |
 |---------|-------------|
-| 📥 *JSON Export* | Structured JSON download of any result set |
-| 📄 *CSV Export* | Spreadsheet-compatible result export |
-| 📊 *5 Visualizations* | Author distribution, tag frequency, quote length, era pie, score analysis |
-| 🎨 *Streamlit UI* | Real-time web interface for natural language querying |
+| 📥 **JSON Export** | Structured JSON download of any result set |
+| 📄 **CSV Export** | Spreadsheet-compatible result export |
+| 📊 **5 Visualizations** | Author distribution, tag frequency, quote length, era pie, score analysis |
+| 🎨 **Streamlit UI** | Real-time web interface for natural language querying |
 
 ---
 
-## System Architecture
+## 🏗️ System Architecture
 
+```text
 ┌────────────────────────────────────────────────────────────┐
 │                        USER QUERY                          │
 │          "Quotes about insanity attributed to Einstein"    │
@@ -101,7 +102,7 @@ The system enables natural language querying across **2,508 quotes** from **880 
 │                    HYBRID RANKING                          │
 │  Score = α × Semantic + (1-α) × BM25 + Keyword Boost      │
 │  • Reciprocal Rank Fusion (RRF)                            │
-│  • Author / tag boost (+0.15 / +0.10)                     │
+│  • Author / tag boost (+0.15 / +0.10)                      │
 │  • Final re-ranking by combined score                      │
 └─────────────────────────┬──────────────────────────────────┘
                           ▼
@@ -114,17 +115,20 @@ The system enables natural language querying across **2,508 quotes** from **880 
 │    "similarity_score": 0.923                               │
 │  }                                                         │
 └────────────────────────────────────────────────────────────┘
+```
+
+---
 
 ## 🤖 Embedding Model
 
 | Property | Value |
 |----------|-------|
-| *Model* | sentence-transformers/all-mpnet-base-v2 |
-| *Architecture* | MPNet (Microsoft) |
-| *Dimensions* | 768 |
-| *Max Sequence Length* | 384 tokens |
-| *Pooling* | Mean Pooling |
-| *Similarity Metric* | Cosine (via normalized Inner Product) |
+| **Model** | `sentence-transformers/all-mpnet-base-v2` |
+| **Architecture** | MPNet (Microsoft) |
+| **Dimensions** | 768 |
+| **Max Sequence Length** | 384 tokens |
+| **Pooling** | Mean Pooling |
+| **Similarity Metric** | Cosine (via normalized Inner Product) |
 
 ### Model Selection Rationale
 
@@ -132,7 +136,7 @@ The system enables natural language querying across **2,508 quotes** from **880 
 |-------|------|---------|----------|
 | all-MiniLM-L6-v2 | 384 | Good | ❌ |
 | all-MiniLM-L12-v2 | 384 | Better | ❌ |
-| *all-mpnet-base-v2* | *768* | *Excellent* | ✅ |
+| **all-mpnet-base-v2** | **768** | **Excellent** | ✅ |
 
 ---
 
@@ -140,15 +144,15 @@ The system enables natural language querying across **2,508 quotes** from **880 
 
 | Category | Technology | Purpose |
 |----------|------------|---------|
-| *Language* | Python 3.8+ | Core |
-| *Embedding* | Sentence-Transformers | Text → Dense Vector |
-| *Vector Store* | FAISS (IndexFlatIP) | Fast ANN Search |
-| *Keyword Search* | BM25 Okapi | Sparse Retrieval |
-| *Metadata DB* | ChromaDB | Filtered Queries |
-| *Frontend* | Streamlit | Web App |
-| *Visualization* | Plotly, Matplotlib | Interactive Charts |
-| *Data* | Pandas, NumPy | Processing |
-| *Dataset* | HuggingFace Datasets | Source |
+| **Language** | Python 3.8+ | Core |
+| **Embedding** | Sentence-Transformers | Text → Dense Vector |
+| **Vector Store** | FAISS (IndexFlatIP) | Fast ANN Search |
+| **Keyword Search** | BM25 Okapi | Sparse Retrieval |
+| **Metadata DB** | ChromaDB | Filtered Queries |
+| **Frontend** | Streamlit | Web App |
+| **Visualization** | Plotly, Matplotlib | Interactive Charts |
+| **Data** | Pandas, NumPy | Processing |
+| **Dataset** | HuggingFace Datasets | Source |
 
 ---
 
@@ -158,11 +162,11 @@ The system enables natural language querying across **2,508 quotes** from **880 
 
 | Metric | Score |
 |--------|-------|
-| Average Similarity Score | *1.000* |
-| Precision@5 | *0.875* |
-| Keyword Relevance | *0.875* |
-| Author Diversity | *0.825* |
-| Overall Quality | *★★★★ Excellent* |
+| Average Similarity Score | **1.000** |
+| Precision@5 | **0.875** |
+| Keyword Relevance | **0.875** |
+| Author Diversity | **0.825** |
+| Overall Quality | **★★★★ Excellent** |
 
 ### Per-Query Breakdown
 
@@ -205,23 +209,27 @@ The system enables natural language querying across **2,508 quotes** from **880 
     }
   ]
 }
+```
+
+---
 
 ## 🎨 Design Decisions
 
 ### 1. Hybrid Search (Semantic + BM25)
 Dense retrieval understands meaning; BM25 captures exact term matches. Combined via Reciprocal Rank Fusion:
+```
 Score = 0.7 × Semantic + 0.3 × BM25 + Keyword Boost
-
-**Result:**
-
-### 1. Precision improved from 0.63 → 0.875
+```
+**Result:** Precision improved from 0.63 → 0.875
 
 ### 2. all-mpnet-base-v2 over MiniLM
 768-dim representations provide richer semantic structure for complex multi-hop queries. Trade-off in speed is acceptable at this dataset scale.
 
 ### 3. Keyword Boosting
+```
 Author name match → +0.15
 Tag match         → +0.10
+```
 Handles high-intent explicit queries (e.g., "Oscar Wilde quotes").
 
 ### 4. Pre-computed Embeddings
@@ -241,4 +249,3 @@ Inner product on L2-normalized vectors = cosine similarity. Exact nearest-neighb
 | Empty multi-hop intersections | Relaxed matching to 2+ queries, combined fallback | Always returns results |
 | Slow first-time load (~400MB download) | Pre-computed embeddings + Streamlit caching | <5s on reload |
 | ChromaDB memory errors on large batches | Batch insertion (100 docs/batch) + FAISS fallback | Stable indexing |
-
